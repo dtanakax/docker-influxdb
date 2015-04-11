@@ -70,6 +70,38 @@ UDP_DBを指定した場合は、UDPポート(デフォルトポート4444か`UD
 クラスタリング
 -------------------------
 
+以下の環境変数をセットします。
+
+- `REPLI_FACTOR=x` クラスタ内でのレプリカセット数
+- `FORCE_HOSTNAME="auto"` 強制的にIPv4アドレスを使用
+- `FORCE_HOSTNAME="hostname"` 任意のホスト名
+
+以下はシンプルなマスタースレーブクラスタ設定例です。
+
+MasterDBをまず起動します。
+
+    docker run -p 8083:8083 -p 8086:8086 \
+      -e FORCE_HOSTNAME="auto" -e REPLI_FACTOR=2 \
+      -d --name master tanaka0323/influxdb
+
+その後、SlaveDBを起動
+
+    docker run -p 8083 -p 8086 \
+      --link master:seed1 \         # 頭にseedと付いた連番のalias名を指定すること
+      -e FORCE_HOSTNAME="auto" \
+      -d tanaka0323/influxdb
+
+環境変数
+--------------------------
+
+- `PRE_CREATE_DB` 初期データベース作成
+- `SSL_SUPPORT` SSLサポート true or false
+- `SSL_CERT` SSL証明書
+- `UDP_DB` UDPデータベース
+- `UDP_PORT` UDBポート番号
+- `REPLI_FACTOR` クラスタ内でのレプリカセット数
+- `FORCE_HOSTNAME` ホスト名  "auto" or "ホスト名"
+
 利用可能なボリューム
 -------------------------
 

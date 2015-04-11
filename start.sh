@@ -1,6 +1,52 @@
 #!/bin/bash
 set -m
+
 CONFIG_FILE="/config/config.toml"
+CONFIG_ORG_FILE="/config/config.toml.org"
+
+# Recreate config files
+rm -f ${CONFIG_FILE}
+cp -f ${CONFIG_ORG_FILE} ${CONFIG_FILE}
+
+FIRSTRUN=/firstrun
+if [ ! -f $FIRSTRUN ]; then
+    touch $FIRSTRUN
+else
+    # Clear previous cluster information
+    rm -rf /data/raft
+fi
+
+# Set SEED value from environment variable
+function setSeedsEnv() {
+    local _out=out.txt
+    local _iplist=list.txt
+    local _seedaddrs=""
+
+    IFS=$'\n'
+    local _envf=(`env`)
+    for _line in "${_envf[@]}"; do
+        IFS='='
+        set -- $_line
+        if [[ "$1" =~ ^SEED.*8090_TCP$ ]]; then
+            _ip=`echo $2 | cut -c7-`
+            echo $_ip >> $_out
+        fi
+    done
+
+    if [ -f $_out ]; then
+        IFS=$'\n'
+        awk '!x[$0]++' $_out >> $_iplist
+        _list=(`cat $_iplist`)
+        _seedaddrs="$(IFS=,; echo "${_list[*]}")"
+        rm -f $_out $_iplist
+    fi
+
+    if [ -n "${_seedaddrs}" ]; then
+        SEEDS="${_seedaddrs}"
+    else
+        unset SEEDS
+    fi
+}
 
 # Dynamically change the value of 'max-open-shards' to what 'ulimit -n' returns
 sed -i "s/^max-open-shards.*/max-open-shards = $(ulimit -n)/" ${CONFIG_FILE}
@@ -16,8 +62,11 @@ if [ -n "${FORCE_HOSTNAME}" ]; then
     fi
 fi
 
+setSeedsEnv
+
 if [ -n "${SEEDS}" ]; then
     SEEDS=$(eval SEEDS=$SEEDS ; echo $SEEDS | grep '^\".*\"$' || echo "\""$SEEDS"\"" | sed -e 's/, */", "/g')
+    echo $SEEDS;
     /usr/bin/perl -p -i -e "s/^# seed-servers.*$/seed-servers = [${SEEDS}]/g" ${CONFIG_FILE}
 fi
 
@@ -48,7 +97,7 @@ fi
 #SSL SUPPORT (Enable https support on port 8084)
 API_URL="http://localhost:8086"
 CERT_PEM="/cert.pem"
-SUBJECT_STRING="/C=US/ST=NewYork/L=NYC/O=Tutum/CN=*"
+SUBJECT_STRING="/C=JP/ST=Tokyo"
 if [ -n "${SSL_SUPPORT}" ]; then
     echo "=> SSL Support enabled, using SSl api ..."
     echo "=> Listening on port 8084(https api), disabling port 8086(http api)"
