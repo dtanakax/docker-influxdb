@@ -29,7 +29,7 @@ git pull後に
     $ docker build -t tanaka0323/influxdb .
 
 起動  
-(注:ポート8090と8099は、クラスタリングに使用されます。パブリックに公開はしないで下さい。)
+(注:ポート8090と8099は、クラスタリングに使用されます。)
 
     $ docker run -d -p 8083:8083 -p 8086:8086 --expose 8090 --expose 8099 tanaka0323/influxdb
 
