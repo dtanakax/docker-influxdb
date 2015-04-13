@@ -143,7 +143,7 @@ if [ -n "${PRE_CREATE_DB}" ]; then
         for x in $arr
         do
             echo "=> Creating database: ${x}"
-            curl -s -k -X POST -d "{\"name\":\"${x}\"}" $(echo ${API_URL}'/db?u=root&p='${PASS})
+            curl -X POST 'http://localhost:8086/db?u=root&p=root' -d "{\"name\":\"${x}\"}"
         done
         echo ""
 
