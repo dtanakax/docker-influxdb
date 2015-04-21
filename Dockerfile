@@ -34,6 +34,8 @@ RUN ln -sf /dev/stdout /opt/influxdb/shared/log.txt
 # Define mountable directories.
 VOLUME ["/data"]
 
+ENTRYPOINT ["./start.sh"]
+
 # Set the port
 # Admin server: 8083
 # HTTP API:     8086
@@ -42,5 +44,4 @@ VOLUME ["/data"]
 # Protobuf:     8099 for clustering
 EXPOSE 8083 8086 8084 8090 8099
 
-# Executing sh
-ENTRYPOINT ./start.sh
+CMD ["/usr/bin/influxdb"]
