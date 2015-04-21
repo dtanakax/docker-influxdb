@@ -11,7 +11,7 @@ Base Docker Image
 説明
 --------------------------
 
-InfluxDB Dockerコンテナイメージです。
+InfluxDB Dockerコンテナ作成設定
 
 [InfluxDBとは？](http://influxdb.com/)  
 [Dockerとは？](https://docs.docker.com/)  
