@@ -19,7 +19,7 @@ InfluxDB Dockerコンテナ作成設定
 起動  
 (注:ポート8090と8099は、クラスタリングに使用されます。)
 
-    $ docker run -d -p 8083:8083 -p 8086:8086 --expose 8090 --expose 8099 tanaka0323/influxdb
+    $ docker run -d -p 8083:8083 -p 8086:8086 --expose 8090 --expose 8099 dtanakax/influxdb
 
 InfluxDB 初期設定
 -------------------------
@@ -34,7 +34,7 @@ InfluxDB 初期設定
 例として以下の起動オプションで"db1","db2","db3"という名前のデータベースが作成されます。  
 区切り文字";"でデータベース名を指定します。
 
-    $ docker run -d -e PRE_CREATE_DB="db1;db2;db3" -p 8083:8083 -p 8086:8086 --expose 8090 --expose 8099 tanaka0323/influxdb
+    $ docker run -d -e PRE_CREATE_DB="db1;db2;db3" -p 8083:8083 -p 8086:8086 --expose 8090 --expose 8099 dtanakax/influxdb
 
 SSL サポート
 -------------------------
@@ -46,14 +46,14 @@ SSL_CERTを指定した場合は、システムは提供されたSSL証明書を
 
 例として以下コマンドの様に指定できます。
 
-    $ docker run -d -p 8083:8083 -p 8084:8084 -e SSL_SUPPORT="True" -e SSL_CERT="/opt/cert.pem" tanaka0323/influxdb
+    $ docker run -d -p 8083:8083 -p 8084:8084 -e SSL_SUPPORT="True" -e SSL_CERT="/opt/cert.pem" dtanakax/influxdb
 
 UDP サポート
 -------------------------
 
 UDP_DBを指定した場合は、UDPポート(デフォルトポート4444か`UDP_PORT`で指定します。)をオープンし、指定されたデータベースのイベントを受信します。
 
-    $ docker run -d -p 8083:8083 -p 8086:8086 --expose 8090 --expose 8099 --expose 4444 -e UDP_DB="my_db" tanaka0323/influxdb
+    $ docker run -d -p 8083:8083 -p 8086:8086 --expose 8090 --expose 8099 --expose 4444 -e UDP_DB="my_db" dtanakax/influxdb
 
 クラスタリング
 -------------------------
@@ -70,14 +70,14 @@ MasterDBをまず起動します。
 
     docker run -p 8083:8083 -p 8086:8086 \
       -e FORCE_HOSTNAME="auto" -e REPLI_FACTOR=2 \
-      -d --name master tanaka0323/influxdb
+      -d --name master dtanakax/influxdb
 
 その後、SlaveDBを起動
 
     docker run -p 8083 -p 8086 \
       --link master:seed1 \         # 頭にseedと付いた連番のalias名を指定すること
       -e FORCE_HOSTNAME="auto" \
-      -d tanaka0323/influxdb
+      -d dtanakax/influxdb
 
 環境変数
 --------------------------
