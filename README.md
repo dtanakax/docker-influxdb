@@ -83,6 +83,7 @@ MasterDBをまず起動します。
 --------------------------
 
 - `PRE_CREATE_DB` 初期データベース作成
+- 'INFLUXDB_INIT_PWD' 初期rootパスワード
 - `SSL_SUPPORT` SSLサポート true or false
 - `SSL_CERT` SSL証明書
 - `UDP_DB` UDPデータベース
