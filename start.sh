@@ -143,7 +143,7 @@ if [ "$1" = "/usr/bin/influxdb" ]; then
             IFS=';'
             for x in $PRE_CREATE_DB; do
                 echo "=> Creating database: ${x}"
-                curl -X POST 'http://localhost:8086/db?u=root&p=root' -d "{\"name\":\"${x}\"}"
+                curl -X POST "http://localhost:8086/db?u=root&p=${PASS}" -d "{\"name\":\"${x}\"}"
             done
             echo ""
 
