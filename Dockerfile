@@ -3,9 +3,9 @@ FROM dtanakax/debianjp:wheezy
 
 # File Author / Maintainer
 MAINTAINER Daisuke Tanaka, dtanakax@gmail.com
-
+    
 ENV DEBIAN_FRONTEND noninteractive
-ENV INFLUXDB_VERSION 0.8.8
+ENV INFLUXDB_VERSION 0.9.0
 
 RUN apt-get update && \
     apt-get install -y curl openssl && \
@@ -21,15 +21,11 @@ RUN curl -s -o /tmp/influxdb_latest_amd64.deb https://s3.amazonaws.com/influxdb/
 COPY config.toml /config/config.toml
 COPY start.sh /start.sh
 RUN chmod +x /start.sh
-RUN cp -f /config/config.toml /config/config.toml.org
 
 # Environment variable
 ENV PRE_CREATE_DB **None**
 ENV SSL_SUPPORT **False**
 ENV SSL_CERT **None**
-
-# forward request and error logs to docker log collector
-RUN ln -sf /dev/stdout /opt/influxdb/shared/log.txt
 
 # Define mountable directories.
 VOLUME ["/data"]
