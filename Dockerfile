@@ -5,7 +5,7 @@ FROM dtanakax/debianjp:wheezy
 MAINTAINER Daisuke Tanaka, dtanakax@gmail.com
     
 ENV DEBIAN_FRONTEND noninteractive
-ENV INFLUXDB_VERSION 0.9.0
+ENV INFLUXDB_VERSION 0.9.1
 
 RUN apt-get update && \
     apt-get install -y curl openssl && \
